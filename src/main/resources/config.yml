@@ -1,0 +1,41 @@
+borders:
+  world-border:
+    type: VANILLA
+    margin: 100
+  basic-radius:
+    type: RADIUS
+    center:
+      x: 0
+      z: 0
+    radius:
+      x: 2500
+      z: 2500
+
+world-defaults:
+  enabled: false
+  max-attempts: 10
+  border: world-border
+
+world-overrides:
+  world:
+    enabled: true
+  resource:
+    enabled: true
+    border: basic-radius
+
+cooldown-seconds: 120
+excluded-biomes: []
+  #- "minecraft:cold_ocean"
+  #- "minecraft:deep_cold_ocean"
+  #- "minecraft:deep_frozen_ocean"
+  #- "minecraft:deep_lukewarm_ocean"
+  #- "minecraft:deep_ocean"
+  #- "minecraft:frozen_ocean"
+  #- "minecraft:frozen_river"
+  #- "minecraft:lukewarm_ocean"
+  #- "minecraft:mangrove_swamp"
+  #- "minecraft:ocean"
+  #- "minecraft:river"
+  #- "minecraft:swamp"
+  #- "minecraft:warm_ocean"
+  #- "custom_namespace:biome_name"

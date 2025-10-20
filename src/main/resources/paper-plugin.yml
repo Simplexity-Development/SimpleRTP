@@ -1,0 +1,5 @@
+name: SimpleRTP
+version: '0.0.0'
+main: simplexity.simplertp.SimpleRTP
+api-version: '1.21'
+authors: [ Rhythmic ]
