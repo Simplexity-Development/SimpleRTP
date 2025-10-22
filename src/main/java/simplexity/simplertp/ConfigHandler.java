@@ -30,13 +30,16 @@ public class ConfigHandler {
     private final Set<Key> excludedBiomes = new HashSet<>();
     private boolean defaultRtpEnabled;
     private int defaultMaxAttempts, cooldownSeconds;
-    private double defaultMargin, defaultCenterX, defaultCenterZ,
-            defaultRadiusX, defaultRadiusZ;
-    private RtpWorld defaultWorld;
-    private String defaultTypeString;
+
+    private BorderConfig defaultBorderConfig;
+
 
     public void reloadConfigValues(){
         FileConfiguration config = SimpleRTP.getInstance().getConfig();
+        setupBorderConfigs(config);
+        reloadWorldDefaults(config);
+        reloadOverrides(config);
+        reloadExcludedBiomes(config);
 
     }
 
@@ -91,40 +94,56 @@ public class ConfigHandler {
         return new BorderConfig(BorderType.VANILLA, 0, 0, 0, 0, 0);
     }
     private void reloadWorldDefaults(FileConfiguration config){
-        defaultRtpEnabled = config.getBoolean("world-settings.default.enabled", false);
-        defaultMaxAttempts = config.getInt("world-settings.default.max-attempts", 10);
-        defaultTypeString = config.getString("world-settings.default.border.type", "VANILLA");
-        defaultCenterX = config.getDouble("border-defaults.radius.center.x", 0);
-        defaultCenterZ = config.getDouble("border-defaults.radius.center.z", 0);
-        defaultRadiusX = config.getDouble("border-defaults.radius.radius-x", 2500);
-        defaultRadiusZ = config.getDouble("border-defaults.radius.radius-z", 2500);
-    }
-
-    private void setupWorlds(FileConfiguration config) {
-        ConfigurationSection worldOverrides = config.getConfigurationSection("world-overrides");
-        if (worldOverrides == null) {
-            logger.warn("RTP Settings section is null, please check your config");
+        ConfigurationSection defaultSection = config.getConfigurationSection("world-defaults");
+        if (defaultSection == null) {
+            logger.warn("No configuration section found for world defaults, please check your config");
             return;
         }
-        for (String key : worldOverrides.getKeys(false)) {
-            World world = Bukkit.getWorld(key);
-            if (world == null) {
-                logger.warn("The world '{}' does not appear to exist. Please make sure you are using the name of the world as it is declared in your server folders and not it's display name", key);
-                continue;
-            }
-
-            ConfigurationSection worldSettings = worldOverrides.getConfigurationSection(key);
-            if (worldSettings == null) {
-                logger.warn("{} does not appear to have any settings attached to it, please be sure the YML file is valid and is using SPACE and not TAB", key);
-                continue;
-            }
-            boolean enabled = worldSettings.getBoolean("enabled", defaultRtpEnabled);
-            int maxAttempts = worldSettings.getInt("max-attempts", defaultMaxAttempts);
-            BorderType type = BorderType.fromString(worldSettings.getString("type", defaultTypeString));
-            if (type.equals(BorderType.VANILLA)) {}
+        defaultRtpEnabled = defaultSection.getBoolean("enabled", false);
+        defaultMaxAttempts = defaultSection.getInt("max-attempts", 10);
+        String borderToUse = defaultSection.getString("border", "world-border");
+        defaultBorderConfig = configuredBorders.get(borderToUse);
+        if (defaultBorderConfig == null) {
+            logger.warn("No border configuration found under the name of '{}' - please make sure that you use the same name as you declared under 'borders'. Falling back to basic world border", borderToUse);
+            defaultBorderConfig = new BorderConfig(BorderType.VANILLA, 0, 0, 0, 0, 0);
         }
     }
 
+    private void reloadOverrides(FileConfiguration config){
+        configuredWorlds.clear();
+        ConfigurationSection overridesSection = config.getConfigurationSection("world-overrides");
+        if (overridesSection == null) {
+            logger.warn("No configuration section found for world overrides");
+            return;
+        }
+        Set<String> keys = overridesSection.getKeys(false);
+        for (String worldName : keys) {
+            World world = Bukkit.getWorld(worldName);
+            if (world == null) {
+                logger.warn("No world found by the name of '{}' - please use the name of the world as it is in your world folder, not a display name", worldName);
+                continue;
+            }
+            UUID worldUuid = world.getUID();
+            RtpWorld rtpWorld = getWorldSettings(overridesSection.getConfigurationSection(worldName), worldUuid);
+            configuredWorlds.put(worldUuid, rtpWorld);
+        }
+
+    }
+    private RtpWorld getWorldSettings(ConfigurationSection section, UUID worldUuid){
+        if (section == null) {
+            logger.warn("No configuration section found for world settings, please check your config");
+            return new RtpWorld(worldUuid, new BorderConfig(BorderType.VANILLA, 0, 0, 0, 0, 0), false, 10);
+        }
+        boolean enabled = section.getBoolean("enabled", false);
+        int maxAttempts = section.getInt("max-attempts", 10);
+        String borderToUse = section.getString("border", "world-border");
+        BorderConfig borderConfig = configuredBorders.get(borderToUse);
+        if (borderConfig == null) {
+            logger.warn("No border configuration found under the name of '{}' - please make sure that you use the same name as you declared under 'borders'. Falling back to basic world border", borderToUse);
+            borderConfig = new BorderConfig(BorderType.VANILLA, 0, 0, 0, 0, 0);
+        }
+        return new RtpWorld(worldUuid, borderConfig, enabled, maxAttempts);
+    }
 
     public boolean isDefaultRtpEnabled() {
         return defaultRtpEnabled;
@@ -134,23 +153,8 @@ public class ConfigHandler {
         return defaultMaxAttempts;
     }
 
-    public double getDefaultMargin() {
-        return defaultMargin;
-    }
 
-    public double getDefaultRadiusX() {
-        return defaultRadiusX;
-    }
-
-    public double getDefaultRadiusZ() {
-        return defaultRadiusZ;
-    }
-
-    public double getDefaultCenterX() {
-        return defaultCenterX;
-    }
-
-    public double getDefaultCenterZ() {
-        return defaultCenterZ;
+    public BorderConfig getDefaultBorderConfig(){
+        return defaultBorderConfig;
     }
 }
