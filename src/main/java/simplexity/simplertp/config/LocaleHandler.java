@@ -1,9 +1,10 @@
-package simplexity.simplertp;
+package simplexity.simplertp.config;
 
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.slf4j.Logger;
+import simplexity.simplertp.SimpleRTP;
 
 import java.io.File;
 import java.io.IOException;

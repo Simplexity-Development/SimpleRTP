@@ -1,4 +1,4 @@
-package simplexity.simplertp;
+package simplexity.simplertp.config;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

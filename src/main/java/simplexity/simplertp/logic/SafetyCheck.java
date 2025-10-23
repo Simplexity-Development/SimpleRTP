@@ -1,13 +1,14 @@
-package simplexity.simplertp;
+package simplexity.simplertp.logic;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.entity.Player;
-import org.bukkit.potion.PotionEffectType;
 
 public class SafetyCheck {
 
     public static int checkSafetyFlags(Location location) {
+        if (location == null) {
+            return SafetyFlag.NULL_LOCATION.bitFlag;
+        }
         int flags = 0;
         Location blockAbove = location.clone().add(0, 1, 0);
         Location blockBelow = location.clone().add(0, -1, 0);

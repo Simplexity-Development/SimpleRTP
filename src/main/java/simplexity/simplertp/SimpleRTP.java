@@ -2,6 +2,8 @@ package simplexity.simplertp;
 
 import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents;
 import org.bukkit.plugin.java.JavaPlugin;
+import simplexity.simplertp.command.RandomTeleportCommand;
+import simplexity.simplertp.config.ConfigHandler;
 
 public final class SimpleRTP extends JavaPlugin {
 
@@ -20,12 +22,19 @@ public final class SimpleRTP extends JavaPlugin {
                     commands.registrar().register(RandomTeleportCommand.createCommand());
                 }
         );
+        registerPermissions();
         // Plugin startup logic
 
     }
 
     public static SimpleRTP getInstance() {
         return instance;
+    }
+
+    private void registerPermissions(){
+        for (RtpPermission perm : RtpPermission.values()) {
+            getServer().getPluginManager().addPermission(perm.getPermission());
+        }
     }
 
     @Override

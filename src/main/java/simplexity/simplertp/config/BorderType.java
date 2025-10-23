@@ -1,7 +1,8 @@
-package simplexity.simplertp;
+package simplexity.simplertp.config;
 
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
+import simplexity.simplertp.SimpleRTP;
 
 public enum BorderType {
     VANILLA,

@@ -1,4 +1,4 @@
-package simplexity.simplertp;
+package simplexity.simplertp.config;
 
 import net.kyori.adventure.key.Key;
 import org.bukkit.Bukkit;
@@ -6,6 +6,7 @@ import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.slf4j.Logger;
+import simplexity.simplertp.SimpleRTP;
 
 import java.util.*;
 

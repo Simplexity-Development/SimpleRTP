@@ -1,4 +1,4 @@
-package simplexity.simplertp;
+package simplexity.simplertp.command;
 
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.tree.LiteralCommandNode;
@@ -8,6 +8,12 @@ import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import simplexity.simplertp.RtpPermission;
+import simplexity.simplertp.SimpleRTP;
+import simplexity.simplertp.config.ConfigHandler;
+import simplexity.simplertp.config.LocaleMessage;
+import simplexity.simplertp.config.RtpWorld;
+import simplexity.simplertp.logic.TeleportLogic;
 
 public class RandomTeleportCommand {
 

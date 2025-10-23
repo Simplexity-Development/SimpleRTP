@@ -1,4 +1,4 @@
-package simplexity.simplertp;
+package simplexity.simplertp.config;
 
 import java.util.UUID;
 

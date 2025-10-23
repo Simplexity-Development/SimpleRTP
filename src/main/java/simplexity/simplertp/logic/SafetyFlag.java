@@ -1,4 +1,4 @@
-package simplexity.simplertp;
+package simplexity.simplertp.logic;
 
 public enum SafetyFlag {
     DAMAGE_RISK(1),
@@ -8,7 +8,8 @@ public enum SafetyFlag {
     NOT_SOLID(16),
     SUFFOCATION(32),
     UNDERWATER(64),
-    UNSTABLE(128);
+    UNSTABLE(128),
+    NULL_LOCATION(256);
 
     final int bitFlag;
 
