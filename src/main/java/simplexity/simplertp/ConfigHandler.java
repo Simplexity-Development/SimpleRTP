@@ -34,7 +34,7 @@ public class ConfigHandler {
     private BorderConfig defaultBorderConfig;
 
 
-    public void reloadConfigValues(){
+    public void reloadConfigValues() {
         FileConfiguration config = SimpleRTP.getInstance().getConfig();
         setupBorderConfigs(config);
         reloadWorldDefaults(config);
@@ -59,7 +59,7 @@ public class ConfigHandler {
     }
 
 
-    private void setupBorderConfigs(FileConfiguration config){
+    private void setupBorderConfigs(FileConfiguration config) {
         configuredBorders.clear();
         ConfigurationSection bordersSection = config.getConfigurationSection("borders");
         if (bordersSection == null) {
@@ -68,7 +68,7 @@ public class ConfigHandler {
         }
         Set<String> borders = bordersSection.getKeys(false);
         for (String border : borders) {
-            ConfigurationSection borderSection = config.getConfigurationSection(border);
+            ConfigurationSection borderSection = bordersSection.getConfigurationSection(border);
             if (borderSection == null) {
                 logger.warn("{} is not a proper configuration section, please check your syntax", border);
                 continue;
@@ -78,7 +78,7 @@ public class ConfigHandler {
         }
     }
 
-    private BorderConfig resolveBorderConfig(ConfigurationSection config){
+    private BorderConfig resolveBorderConfig(ConfigurationSection config) {
         BorderType borderType = BorderType.fromString(config.getString("type"));
         if (borderType.equals(BorderType.VANILLA)) {
             double margin = config.getDouble("margin", 100);
@@ -93,7 +93,8 @@ public class ConfigHandler {
         }
         return new BorderConfig(BorderType.VANILLA, 0, 0, 0, 0, 0);
     }
-    private void reloadWorldDefaults(FileConfiguration config){
+
+    private void reloadWorldDefaults(FileConfiguration config) {
         ConfigurationSection defaultSection = config.getConfigurationSection("world-defaults");
         if (defaultSection == null) {
             logger.warn("No configuration section found for world defaults, please check your config");
@@ -109,7 +110,7 @@ public class ConfigHandler {
         }
     }
 
-    private void reloadOverrides(FileConfiguration config){
+    private void reloadOverrides(FileConfiguration config) {
         configuredWorlds.clear();
         ConfigurationSection overridesSection = config.getConfigurationSection("world-overrides");
         if (overridesSection == null) {
@@ -129,7 +130,8 @@ public class ConfigHandler {
         }
 
     }
-    private RtpWorld getWorldSettings(ConfigurationSection section, UUID worldUuid){
+
+    private RtpWorld getWorldSettings(ConfigurationSection section, UUID worldUuid) {
         if (section == null) {
             logger.warn("No configuration section found for world settings, please check your config");
             return new RtpWorld(worldUuid, new BorderConfig(BorderType.VANILLA, 0, 0, 0, 0, 0), false, 10);
@@ -154,7 +156,19 @@ public class ConfigHandler {
     }
 
 
-    public BorderConfig getDefaultBorderConfig(){
+    public BorderConfig getDefaultBorderConfig() {
         return defaultBorderConfig;
     }
+
+    public HashMap<UUID, RtpWorld> getConfiguredWorlds() {
+        return configuredWorlds;
+    }
+
+    public RtpWorld getRtpWorld(UUID worldUuid) {
+        RtpWorld rtpWorld = configuredWorlds.get(worldUuid);
+        if (rtpWorld == null)
+            rtpWorld = new RtpWorld(worldUuid, defaultBorderConfig, defaultRtpEnabled, defaultMaxAttempts);
+        return rtpWorld;
+    }
+
 }

@@ -10,6 +10,11 @@ public final class SimpleRTP extends JavaPlugin {
     @Override
     public void onEnable() {
         instance = this;
+        this.saveDefaultConfig();
+        getConfig().options().copyDefaults(true);
+        saveConfig();
+        reloadConfig();
+        ConfigHandler.getInstance().reloadConfigValues();
         this.getLifecycleManager().registerEventHandler(
                 LifecycleEvents.COMMANDS, commands -> {
                     commands.registrar().register(RandomTeleportCommand.createCommand());
