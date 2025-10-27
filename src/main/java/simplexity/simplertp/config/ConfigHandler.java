@@ -41,7 +41,12 @@ public class ConfigHandler {
         reloadWorldDefaults(config);
         reloadOverrides(config);
         reloadExcludedBiomes(config);
+        reloadOtherConfigOptions(config);
+        LocaleHandler.getInstance().reloadLocale();
+    }
 
+    private void reloadOtherConfigOptions(FileConfiguration config){
+        cooldownSeconds = config.getInt("cooldown-seconds", 120);
     }
 
     @SuppressWarnings("PatternValidation")
@@ -172,4 +177,11 @@ public class ConfigHandler {
         return rtpWorld;
     }
 
+    public int getCooldownSeconds() {
+        return cooldownSeconds;
+    }
+
+    public Set<Key> getExcludedBiomes() {
+        return excludedBiomes;
+    }
 }

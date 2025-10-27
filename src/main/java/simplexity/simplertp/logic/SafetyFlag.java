@@ -9,7 +9,9 @@ public enum SafetyFlag {
     SUFFOCATION(32),
     UNDERWATER(64),
     UNSTABLE(128),
-    NULL_LOCATION(256);
+    NULL_LOCATION(256),
+
+    BIOME_DISALLOWED(512);
 
     final int bitFlag;
 

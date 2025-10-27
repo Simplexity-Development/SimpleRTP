@@ -24,11 +24,11 @@ public class LocaleHandler {
         Path parentDir = dataFilePath.getParent();
         try {
             if (parentDir != null) {
-                Files.createDirectories(parentDir); // creates parent directories if needed
+                Files.createDirectories(parentDir);
             }
 
             if (Files.notExists(dataFilePath)) {
-                Files.createFile(dataFilePath); // throws IOException if it fails
+                Files.createFile(dataFilePath);
             }
 
             reloadLocale();

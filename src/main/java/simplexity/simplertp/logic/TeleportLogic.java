@@ -17,7 +17,7 @@ import java.util.concurrent.ThreadLocalRandom;
 public class TeleportLogic {
 
 
-    public static boolean teleportPlayerRandomly(World world, RtpWorld rtpWorld, Player player) {
+    public static void teleportPlayerRandomly(World world, RtpWorld rtpWorld, Player player) {
         BorderConfig borderConfig = rtpWorld.borderConfig();
         Location safeLocation = null;
         int maxAttempts = 10;
@@ -36,7 +36,7 @@ public class TeleportLogic {
         }
         if (safeLocation == null) {
             player.sendRichMessage(LocaleMessage.UNABLE_TO_FIND_LOCATION.getMessage());
-            return false;
+            return;
         }
         Location finalLocation = safeLocation;
         Bukkit.getScheduler().runTask(SimpleRTP.getInstance(), () -> {
@@ -47,7 +47,7 @@ public class TeleportLogic {
                     Placeholder.parsed("z-loc", String.valueOf(finalLocation.getBlockZ())),
                     Placeholder.parsed("world-name", finalLocation.getWorld().getName().replace("_", " ")));
         });
-        return true;
+        Cooldown.addToCooldown(player.getUniqueId());
     }
 
 

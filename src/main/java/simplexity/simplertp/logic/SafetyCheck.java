@@ -2,6 +2,7 @@ package simplexity.simplertp.logic;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
+import simplexity.simplertp.config.ConfigHandler;
 
 public class SafetyCheck {
 
@@ -27,6 +28,9 @@ public class SafetyCheck {
         // Is the location underwater?
         if (isMaterial(blockAbove, Material.WATER)) {
             flags |= SafetyFlag.UNDERWATER.bitFlag;
+        }
+        if (ConfigHandler.getInstance().getExcludedBiomes().contains(location.getBlock().getBiome().getKey())) {
+            flags |= SafetyFlag.BIOME_DISALLOWED.bitFlag;
         }
 
         return flags;
